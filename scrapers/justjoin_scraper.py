@@ -1,5 +1,6 @@
 import httpx
 from models.offer import JobOffer, Skill, SalaryRange
+from storage import save_offers
 
 
 BASE_URL = "https://justjoin.it"
@@ -92,7 +93,8 @@ def scrape_offers(category: str = "ai", max_pages: int = 3) -> list[JobOffer]:
 
 if __name__ == "__main__":
     all_offers = scrape_offers(category="ai", max_pages=1)
-    print(f"Found {len(all_offers)} offers")
+    save_offers(all_offers)
+    print(f"Found {len(all_offers)} offers → saved to data/offers.json")
     for o in all_offers[:3]:
         print(f"  - {o.title} @ {o.company} | {o.city}")
         print(f"    Skills: {[s.name for s in o.required_skills]}")
