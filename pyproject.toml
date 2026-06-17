@@ -8,4 +8,5 @@ dependencies = [
     "selectolax>=0.3",
     "python-dotenv>=1.0",
     "pydantic-ai>=1.71",
+    "langgraph>=0.4",
 ]
