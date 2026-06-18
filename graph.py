@@ -17,7 +17,11 @@ class GraphState(TypedDict):
 
 
 def scrape_node(state: GraphState) -> dict:
-    offers = scrape_offers(category=state["category"], max_pages=state["max_pages"])
+    offers = scrape_offers(
+        category=state["category"],
+        max_pages=state["max_pages"],
+        valid_categories={"ai", "ml", "data"},
+    )
     save_offers(offers)
     print(f"  ✓ Pobrano {len(offers)} ofert")
     return {}

@@ -40,12 +40,19 @@ def _build_offer_url(slug: str) -> str:
     return f"{BASE_URL}/job-offer/{slug}"
 
 
-def scrape_offers(category: str = "ai", max_pages: int = 3) -> list[JobOffer]:
+def scrape_offers(
+    category: str = "ai",
+    max_pages: int = 3,
+    valid_categories: set[str] | None = None,
+) -> list[JobOffer]:
+    if valid_categories is None:
+        valid_categories = {"ai", "ml", "data"}
+
     offers: list[JobOffer] = []
     cursor = 0
 
     for page in range(max_pages):
-        params = {"category": category}
+        params = {}
         if cursor:
             params["cursor"] = cursor
 
@@ -54,6 +61,10 @@ def scrape_offers(category: str = "ai", max_pages: int = 3) -> list[JobOffer]:
         body = resp.json()
 
         for item in body["data"]:
+            item_cat = item.get("category", {}).get("key", "")
+            if item_cat not in valid_categories:
+                continue
+
             salary = _parse_salary(item.get("employmentTypes", []))
             url = _build_offer_url(item["slug"])
 
